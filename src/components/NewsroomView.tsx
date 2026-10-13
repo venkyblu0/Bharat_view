@@ -73,36 +73,34 @@ export const NewsroomView: React.FC = () => {
     const customStory: CandidateStory = {
       id: `story-injected-${Date.now().toString().slice(-4)}`,
       headline: newHeadline,
-      alternativeHook: 'Urgent Editorial Flash: Dispatched from Live Command Floor',
+      alternativeHook: 'Unverified lead added for source review',
       eventDate: new Date().toISOString().split('T')[0],
       publicationDate: new Date().toISOString().split('T')[0],
       region: newRegion || 'Indo-Pacific',
       subject: 'Urgent Sovereign Assessment',
       category: 'BREAKING',
-      primarySources: [
-        { name: 'Live Field Dispatch', tier: 'TIER_1', date: new Date().toISOString().split('T')[0], excerpt: newClaim || newHeadline }
-      ],
+      primarySources: [],
       corroboratingSources: [],
-      contradictoryEvidence: 'Under ongoing Tier 2 corroboration search.',
+      contradictoryEvidence: 'No corroborating source has been checked.',
       factCheckVerdict: 'UNVERIFIED BREAKING',
-      confidenceLevel: 80,
+      confidenceLevel: 0,
       strategicRelevance: 'Fast-moving strategic lead requiring priority human vetting.',
       politicalContext: 'National security relevance flagged for rapid fact-checking.',
       potentialImplications: 'Awaiting corroborating telemetry.',
       priorityScore: {
-        strategicImportance: 22,
-        evidenceQuality: 18,
-        timeliness: 15,
-        publicInterest: 9,
-        analyticalValue: 8,
-        discussionPotential: 8,
-        editorialAlignment: 5,
-        total: 85
+        strategicImportance: 0,
+        evidenceQuality: 0,
+        timeliness: 0,
+        publicInterest: 0,
+        analyticalValue: 0,
+        discussionPotential: 0,
+        editorialAlignment: 0,
+        total: 0
       },
       recommendedFormat: 'SINGLE_TWEET',
-      proposedTweet: `BREAKING: ${newHeadline}\n\nEvidence under independent verification by Bharat Desk. Details to follow as primary documents are checked.`,
-      sourcesToAttach: ['Dispatch Hash'],
-      legalRiskFlags: ['Breaking unverified: Human sign-off required prior to dispatch.'],
+      proposedTweet: `UNVERIFIED LEAD: ${newHeadline}\n\n${newClaim ? `Submitted claim: ${newClaim}\n\n` : ''}Do not publish until reliable source material has been checked.`,
+      sourcesToAttach: [],
+      legalRiskFlags: ['No independent source verification has been performed.'],
       publicationStatus: 'DRAFT',
       agentAuthor: 'Chief Editor Incident Dispatch'
     };
@@ -116,6 +114,9 @@ export const NewsroomView: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      <div role="alert" className="rounded-lg border border-amber-500/50 bg-amber-950/40 px-4 py-3 text-sm text-amber-100">
+        No news sources are connected, so no stories are generated. Claims you add remain unverified until you check primary sources.
+      </div>
       {/* OSINT Strategic Banner */}
       <div className="relative rounded-xl overflow-hidden border border-slate-800 bg-[#0F172A] shadow-lg">
         <div className="absolute inset-0 z-0 opacity-20">
@@ -129,25 +130,24 @@ export const NewsroomView: React.FC = () => {
         <div className="relative z-10 p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="max-w-2xl">
             <div className="flex items-center gap-2 text-xs text-amber-400 font-mono tracking-wider mb-2">
-              <span>BHARAT SOVEREIGN INTELLIGENCE NETWORK</span>
+              <span>BHARAT VIEW · SAMPLE INTERFACE</span>
               <span aria-hidden="true">&middot;</span>
-              <span>24/7 ACTIVE RADAR</span>
+              <span>NO LIVE FEEDS</span>
             </div>
             <h1 className="text-2xl md:text-3xl font-extrabold text-slate-100 tracking-tight mb-2">
-              Live Strategic Newsroom &amp; Verification Desk
+              Newsroom Demo &amp; Claim Review
             </h1>
             <p className="text-sm text-slate-300 leading-relaxed">
-              Monitoring global geopolitics, Indian Ocean maritime corridors, northern border theatres, 
-              and adversarial narrative operations. Operating under strict evidence-first editorial standards with mandatory human sign-off.
+              This interface does not monitor news feeds or independently verify claims. Use it to review supplied source material; check primary sources before relying on any result.
             </p>
             <div className="flex flex-wrap items-center gap-2 text-xs text-slate-400 mt-4 font-mono">
-              <span>72 Accounts Monitored</span>
+              <span>No stories generated</span>
               <span aria-hidden="true">&middot;</span>
-              <span>30m Cadence</span>
+              <span>No live feeds configured</span>
               <span aria-hidden="true">&middot;</span>
-              <span className="text-emerald-400">Agent 5 Veto: Active</span>
+              <span className="text-emerald-400">Automated fact-checking: Off</span>
               <span aria-hidden="true">&middot;</span>
-              <span className="text-amber-400">Human Approval Gate: Strict</span>
+              <span className="text-amber-400">Approval is local only</span>
             </div>
           </div>
 
@@ -157,7 +157,7 @@ export const NewsroomView: React.FC = () => {
               className="flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-semibold text-slate-200 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg transition-colors cursor-pointer"
             >
               <PlusCircle className="w-4 h-4 text-amber-400" />
-              <span>Inject Breaking Lead</span>
+            <span>Add Unverified Lead</span>
             </button>
             <button
               onClick={() => runResearchCycle()}
@@ -222,7 +222,7 @@ export const NewsroomView: React.FC = () => {
             <div className="p-12 text-center border border-slate-800 rounded-xl bg-slate-900/40">
               <FileCheck2 className="w-10 h-10 text-slate-600 mx-auto mb-3" />
               <div className="text-sm font-semibold text-slate-300">No stories match your filter</div>
-              <div className="text-xs text-slate-500 mt-1">Adjust search parameters or run a new 30-minute intelligence cycle.</div>
+              <div className="text-xs text-slate-500 mt-1">Connect reliable feeds before using automated news cycles. You can add a claim for manual review.</div>
             </div>
           ) : (
             filteredStories.map(story => (
@@ -308,7 +308,7 @@ export const NewsroomView: React.FC = () => {
                 <strong className="text-slate-200">Orientation:</strong> Center-right, sovereign national-interest-first, evidence-led contrast.
               </p>
               <p>
-                <strong className="text-slate-200">Verification Gate:</strong> Agent 5 holds absolute veto authority. Zero unverified assertions permitted.
+                <strong className="text-slate-200">Verification Gate:</strong> No automated verification is connected. All claims remain unverified until a human checks sources.
               </p>
               <p>
                 <strong className="text-slate-200">Format Standard:</strong> Hook &rarr; Evidence &rarr; Context &rarr; Strategic Implication &rarr; Closing Question.

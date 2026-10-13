@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import { 
   CandidateStory, 
   CountryRelationship, 
@@ -12,7 +12,6 @@ import {
 } from '../types/intelligence';
 import { 
   AGENT_SPECS, 
-  INITIAL_CANDIDATE_STORIES, 
   INITIAL_RELATIONSHIPS, 
   INITIAL_MONITORED_ACCOUNTS, 
   INITIAL_CORRECTIONS 
@@ -34,7 +33,6 @@ interface DeskContextType {
   addCandidateStory: (story: CandidateStory) => void;
 
   // Scheduled Cycle
-  cycleSecondsRemaining: number;
   isCycleRunning: boolean;
   telemetryLogs: CycleTelemetry[];
   runResearchCycle: (focusTopic?: string) => Promise<void>;
@@ -78,40 +76,16 @@ const DeskContext = createContext<DeskContextType | null>(null);
 
 export const DeskProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [activeTab, setActiveTab] = useState<'newsroom' | 'agent-lab' | 'review-queue' | 'relationship-index' | 'watchlist' | 'performance'>('newsroom');
-  const [stories, setStories] = useState<CandidateStory[]>(INITIAL_CANDIDATE_STORIES);
-  const [selectedStory, setSelectedStory] = useState<CandidateStory | null>(INITIAL_CANDIDATE_STORIES[0]);
+  const [stories, setStories] = useState<CandidateStory[]>([]);
+  const [selectedStory, setSelectedStory] = useState<CandidateStory | null>(null);
   const [relationships, setRelationships] = useState<CountryRelationship[]>(INITIAL_RELATIONSHIPS);
   const [accounts, setAccounts] = useState<MonitoredAccount[]>(INITIAL_MONITORED_ACCOUNTS);
   const [corrections, setCorrections] = useState<CorrectionRecord[]>(INITIAL_CORRECTIONS);
   const [notification, setNotification] = useState<string | null>(null);
 
   // 30-Minute Cycle Clock (1800s)
-  const [cycleSecondsRemaining, setCycleSecondsRemaining] = useState<number>(1420);
   const [isCycleRunning, setIsCycleRunning] = useState<boolean>(false);
-  const [telemetryLogs, setTelemetryLogs] = useState<CycleTelemetry[]>([
-    {
-      cycleId: 'cycle-043',
-      timestamp: '2026-10-13 00:30 IST',
-      durationMs: 4200,
-      itemsIngested: 28,
-      factChecksCompleted: 3,
-      storiesGenerated: 2,
-      highPriorityStories: 2,
-      status: 'completed',
-      summaryNotes: 'Ingested Depsang patrol protocols and US tech tariff reports. Both queued for human review.'
-    },
-    {
-      cycleId: 'cycle-042',
-      timestamp: '2026-10-13 00:00 IST',
-      durationMs: 3800,
-      itemsIngested: 31,
-      factChecksCompleted: 4,
-      storiesGenerated: 1,
-      highPriorityStories: 1,
-      status: 'completed',
-      summaryNotes: 'Rafale-M IGA verified through French MoD gazette. Story approved and published.'
-    }
-  ]);
+  const [telemetryLogs, setTelemetryLogs] = useState<CycleTelemetry[]>([]);
 
   // Standalone Agent state
   const [selectedAgentId, setSelectedAgentId] = useState<string>('agent-1');
@@ -132,21 +106,6 @@ export const DeskProvider: React.FC<{ children: React.ReactNode }> = ({ children
     stepResults: []
   });
 
-  // Cycle interval timer
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCycleSecondsRemaining(prev => {
-        if (prev <= 1) {
-          // Trigger cycle
-          runResearchCycle();
-          return 1800;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
-
   const triggerToast = (msg: string) => {
     setNotification(msg);
     setTimeout(() => setNotification(null), 4000);
@@ -155,7 +114,7 @@ export const DeskProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Run 30-min Cycle
   const runResearchCycle = async (focusTopic?: string) => {
     setIsCycleRunning(true);
-    triggerToast('Starting automated 30-minute intelligence cycle across all 7 agents...');
+    triggerToast('Checking configured news sources...');
 
     try {
       const res = await fetch('/api/cycle/run', {
@@ -174,20 +133,19 @@ export const DeskProvider: React.FC<{ children: React.ReactNode }> = ({ children
         cycleId: data.cycleId || `cycle-${Date.now().toString().slice(-4)}`,
         timestamp: data.timestamp || new Date().toLocaleTimeString('en-IN') + ' IST',
         durationMs: 3400,
-        itemsIngested: data.itemsIngested || 24,
-        factChecksCompleted: data.factChecksCompleted || 4,
-        storiesGenerated: data.storiesGenerated || 1,
-        highPriorityStories: data.highPriorityStories || 1,
+        itemsIngested: data.itemsIngested ?? 0,
+        factChecksCompleted: data.factChecksCompleted ?? 0,
+        storiesGenerated: data.storiesGenerated ?? 0,
+        highPriorityStories: data.highPriorityStories ?? 0,
         status: 'completed',
-        summaryNotes: data.agentNotes || 'Cycle completed. New candidate story dispatched to Editorial Queue.'
+        summaryNotes: data.agentNotes || 'No source ingestion configured; no stories were generated.'
       };
 
       setTelemetryLogs(prev => [newLog, ...prev]);
-      setCycleSecondsRemaining(1800);
-      triggerToast(`Intelligence cycle completed. ${data.storiesGenerated || 1} new story ready for human review.`);
+      triggerToast(data.storiesGenerated ? `${data.storiesGenerated} candidate story added for review.` : 'No news sources are configured; no stories were generated.');
     } catch (err) {
       console.error(err);
-      triggerToast('Cycle completed with offline fallback. Monitored records synced.');
+      triggerToast('Cycle unavailable. No live monitoring or source sync was performed.');
     } finally {
       setIsCycleRunning(false);
     }
@@ -332,16 +290,14 @@ export const DeskProvider: React.FC<{ children: React.ReactNode }> = ({ children
       region: 'Strategic Intelligence',
       subject: 'Custom Flow Dossier',
       category: 'BREAKING',
-      primarySources: [
-        { name: 'Multi-Agent Investigation Registry', tier: 'TIER_1', date: new Date().toISOString().split('T')[0], excerpt: lastResult.findings.slice(0, 150) }
-      ],
+      primarySources: [],
       corroboratingSources: [],
-      contradictoryEvidence: 'Audited during step verification.',
-      factCheckVerdict: lastResult.verdict || 'VERIFIED',
-      confidenceLevel: 94,
-      strategicRelevance: 'Synthesized from custom multi-agent execution pipeline.',
-      politicalContext: 'Evidence assembled under multi-agent sovereign scrutiny.',
-      potentialImplications: 'Provides actionable documentary backing for public discourse.',
+      contradictoryEvidence: 'No source retrieval or independent verification was performed.',
+      factCheckVerdict: 'UNVERIFIED BREAKING',
+      confidenceLevel: 0,
+      strategicRelevance: 'Analysis of user-provided text only.',
+      politicalContext: 'No independent source material was checked.',
+      potentialImplications: 'Requires source review before it can support any conclusion.',
       priorityScore: {
         strategicImportance: 24,
         evidenceQuality: 24,
@@ -354,8 +310,8 @@ export const DeskProvider: React.FC<{ children: React.ReactNode }> = ({ children
       },
       recommendedFormat: 'SINGLE_TWEET',
       proposedTweet: lastResult.proposedContent || lastResult.findings.slice(0, 280),
-      sourcesToAttach: ['Flow Execution Dossier', 'Agent Verification Hashes'],
-      legalRiskFlags: ['Audited by Agent 5 gate'],
+      sourcesToAttach: [],
+      legalRiskFlags: ['No independent source verification has been performed.'],
       publicationStatus: 'DRAFT',
       agentAuthor: `Flow: ${customFlow.name}`
     };
@@ -372,16 +328,12 @@ export const DeskProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (s.id === id) {
         return {
           ...s,
-          publicationStatus: 'PUBLISHED',
-          publishedAt: new Date().toLocaleTimeString('en-IN') + ' IST',
-          impressions: 1200,
-          retweets: 85,
-          likes: 420
+          publicationStatus: 'APPROVED'
         };
       }
       return s;
     }));
-    triggerToast('Story APPROVED by Chief Editor. Marked as Published to X feed.');
+    triggerToast('Story marked approved locally. No post was published to X.');
   };
 
   const rejectStory = (id: string, reason: string) => {
@@ -412,20 +364,8 @@ export const DeskProvider: React.FC<{ children: React.ReactNode }> = ({ children
     triggerToast('Tweet copy successfully updated.');
   };
 
-  const reverifyStory = async (id: string) => {
-    triggerToast('Agent 5 re-verifying primary evidence and corroboration sources...');
-    await new Promise(r => setTimeout(r, 1500));
-    setStories(prev => prev.map(s => {
-      if (s.id === id) {
-        return {
-          ...s,
-          confidenceLevel: Math.min(100, s.confidenceLevel + 2),
-          factCheckVerdict: 'VERIFIED'
-        };
-      }
-      return s;
-    }));
-    triggerToast('Re-verification complete: VERIFIED rating re-affirmed with primary sources.');
+  const reverifyStory = async (_id: string) => {
+    triggerToast('Automatic source verification is not configured. Verdict and confidence were not changed.');
   };
 
   const addCandidateStory = (story: CandidateStory) => {
@@ -498,7 +438,6 @@ export const DeskProvider: React.FC<{ children: React.ReactNode }> = ({ children
       updateStoryTweet,
       reverifyStory,
       addCandidateStory,
-      cycleSecondsRemaining,
       isCycleRunning,
       telemetryLogs,
       runResearchCycle,

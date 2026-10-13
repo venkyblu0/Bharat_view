@@ -1,6 +1,6 @@
 {
-  "name": "Bharat Strategic Intelligence & X Editorial Desk",
-  "description": "Autonomous geopolitical intelligence, fact-checking, and editorial command center for sovereign India-focused strategic commentary on X.",
+  "name": "Bharat View Newsroom Demo",
+  "description": "Local-first interface for reviewing user-provided claims. Does not monitor feeds, verify sources, or publish posts.",
   "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "majorCapabilities": []
 }
