@@ -72,6 +72,9 @@ export const WatchlistView: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      <div role="alert" className="rounded-lg border border-amber-500/50 bg-amber-950/40 px-4 py-3 text-sm text-amber-100">
+        This is a sample directory only. Accounts are not being monitored, and reliability scores or “last checked” times are not live measurements.
+      </div>
       {/* Header */}
       <div className="p-4 rounded-xl border border-slate-800 bg-[#0F172A] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -80,7 +83,7 @@ export const WatchlistView: React.FC = () => {
             <span>Source Watchlist &amp; Corrections Archive (Sections 3 &amp; 12)</span>
           </h1>
           <p className="text-xs text-slate-400 mt-1">
-            Curated directory of 70+ institutional handles audited monthly by reliability, tier hierarchy, and documented conflict of interest.
+            Sample directory of source records. No live feed, monthly audit, or source reliability scoring is connected.
           </p>
         </div>
 

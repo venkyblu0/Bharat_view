@@ -100,8 +100,8 @@ export const DeskProvider: React.FC<{ children: React.ReactNode }> = ({ children
     currentStepIndex: 0,
     steps: [
       { id: 'step-1', agentId: 'agent-4', customDutyPrompt: 'Deconstruct adversarial narrative, identify origins, and detect contradictions.', pipeInputFromPrevious: false },
-      { id: 'step-2', agentId: 'agent-5', customDutyPrompt: 'Independently fact-check with Tier 1 evidence; assign 7-tier verdict and confidence score.', pipeInputFromPrevious: true },
-      { id: 'step-3', agentId: 'agent-7', customDutyPrompt: 'Draft sharp, neutral-sounding, high-impact tweet and thread using evidence contrast.', pipeInputFromPrevious: true }
+      { id: 'step-2', agentId: 'agent-5', customDutyPrompt: 'Review only the supplied material; list missing evidence and mark the claim unverified.', pipeInputFromPrevious: true },
+      { id: 'step-3', agentId: 'agent-7', customDutyPrompt: 'Draft a clearly labeled, unverified summary of the supplied material.', pipeInputFromPrevious: true }
     ],
     stepResults: []
   });
@@ -242,8 +242,8 @@ export const DeskProvider: React.FC<{ children: React.ReactNode }> = ({ children
         currentStepIndex: 0,
         steps: [
           { id: 's1', agentId: 'agent-4', customDutyPrompt: 'Deconstruct adversarial narrative, identify origins, and detect contradictions.', pipeInputFromPrevious: false },
-          { id: 's2', agentId: 'agent-5', customDutyPrompt: 'Independently fact-check with Tier 1 evidence; assign 7-tier verdict and confidence score.', pipeInputFromPrevious: true },
-          { id: 's3', agentId: 'agent-7', customDutyPrompt: 'Draft sharp, neutral-sounding, high-impact tweet and thread using evidence contrast.', pipeInputFromPrevious: true }
+          { id: 's2', agentId: 'agent-5', customDutyPrompt: 'Review only the supplied material; list missing evidence and mark the claim unverified.', pipeInputFromPrevious: true },
+          { id: 's3', agentId: 'agent-7', customDutyPrompt: 'Draft a clearly labeled, unverified summary of the supplied material.', pipeInputFromPrevious: true }
         ],
         stepResults: []
       });
@@ -255,8 +255,8 @@ export const DeskProvider: React.FC<{ children: React.ReactNode }> = ({ children
         currentStepIndex: 0,
         steps: [
           { id: 's1', agentId: 'agent-2', customDutyPrompt: 'Compare policy claims against manifestos, CAG reports, and DGCIS official datasets.', pipeInputFromPrevious: false },
-          { id: 's2', agentId: 'agent-5', customDutyPrompt: 'Examine statistical discrepancy and assign strict verification verdict.', pipeInputFromPrevious: true },
-          { id: 's3', agentId: 'agent-7', customDutyPrompt: 'Formulate evidence-led policy accountability tweet.', pipeInputFromPrevious: true }
+          { id: 's2', agentId: 'agent-5', customDutyPrompt: 'Review supplied material only, identify missing evidence, and mark the claim unverified.', pipeInputFromPrevious: true },
+          { id: 's3', agentId: 'agent-7', customDutyPrompt: 'Draft a clearly labeled, unverified summary based only on supplied material.', pipeInputFromPrevious: true }
         ],
         stepResults: []
       });
@@ -268,8 +268,8 @@ export const DeskProvider: React.FC<{ children: React.ReactNode }> = ({ children
         currentStepIndex: 0,
         steps: [
           { id: 's1', agentId: 'agent-3', customDutyPrompt: 'Evaluate military hardware specification and satellite imagery OSINT.', pipeInputFromPrevious: false },
-          { id: 's2', agentId: 'agent-5', customDutyPrompt: 'Cross-check against MoD parliamentary records and export gazettes.', pipeInputFromPrevious: true },
-          { id: 's3', agentId: 'agent-7', customDutyPrompt: 'Draft strategic deterrence analysis tweet.', pipeInputFromPrevious: true }
+          { id: 's2', agentId: 'agent-5', customDutyPrompt: 'Review supplied material only; do not claim MoD records or gazettes were checked unless provided.', pipeInputFromPrevious: true },
+          { id: 's3', agentId: 'agent-7', customDutyPrompt: 'Draft a clearly labeled, unverified summary based only on supplied material.', pipeInputFromPrevious: true }
         ],
         stepResults: []
       });

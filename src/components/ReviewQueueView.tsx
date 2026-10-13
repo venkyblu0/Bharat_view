@@ -364,11 +364,10 @@ export const ReviewQueueView: React.FC = () => {
                         />
                         <div>
                           <div className="flex items-center gap-1.5 text-xs font-bold">
-                            <span>Bharat Strategic Intelligence</span>
-                            <span className="text-amber-400" title="Verified Sovereign Intelligence Account">✓</span>
+                            <span>Bharat View Preview</span>
                           </div>
                           <div className="text-[11px] text-slate-400 font-mono">
-                            @BharatIntelDesk &middot; Now
+                            Local preview · not posted
                           </div>
                         </div>
                       </div>

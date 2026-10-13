@@ -265,13 +265,16 @@ export const NewsroomView: React.FC = () => {
                 <div className="text-xs text-slate-400 mb-4 space-y-1">
                   <div className="font-semibold text-slate-300 flex items-center gap-1.5">
                     <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-                    <span>Primary Evidence Cited:</span>
+                    <span>Sources supplied:</span>
                   </div>
                   {story.primarySources.map((source, idx) => (
                     <div key={idx} className="text-slate-400 pl-5 text-[11px] truncate">
                       {source.name} ({source.tier}) &middot; {source.excerpt}
                     </div>
                   ))}
+                  {story.primarySources.length === 0 && (
+                    <div className="text-amber-300 pl-5 text-[11px]">No source material supplied.</div>
+                  )}
                 </div>
 
                 {/* Footer Actions */}
