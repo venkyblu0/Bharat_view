@@ -1,0 +1,6 @@
+{
+  "name": "Bharat Strategic Intelligence & X Editorial Desk",
+  "description": "Autonomous geopolitical intelligence, fact-checking, and editorial command center for sovereign India-focused strategic commentary on X.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
