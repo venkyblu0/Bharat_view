@@ -31,7 +31,7 @@ export const ReviewQueueView: React.FC = () => {
     reverifyStory 
   } = useDesk();
 
-  const [filterStatus, setFilterStatus] = useState<'PENDING' | 'PUBLISHED' | 'REJECTED' | 'ALL'>('PENDING');
+  const [filterStatus, setFilterStatus] = useState<'PENDING' | 'APPROVED' | 'PUBLISHED' | 'REJECTED' | 'ALL'>('PENDING');
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [editTweetText, setEditTweetText] = useState<string>('');
   const [rejectReason, setRejectReason] = useState<string>('');
@@ -39,6 +39,7 @@ export const ReviewQueueView: React.FC = () => {
 
   const displayedStories = stories.filter(story => {
     if (filterStatus === 'PENDING') return story.publicationStatus === 'DRAFT' || story.publicationStatus === 'NEEDS_RESEARCH';
+    if (filterStatus === 'APPROVED') return story.publicationStatus === 'APPROVED';
     if (filterStatus === 'PUBLISHED') return story.publicationStatus === 'PUBLISHED';
     if (filterStatus === 'REJECTED') return story.publicationStatus === 'REJECTED';
     return true;
@@ -94,7 +95,7 @@ export const ReviewQueueView: React.FC = () => {
             <span>Chief Editorial Approval Gate (Human-in-the-Loop)</span>
           </h1>
           <p className="text-xs text-slate-400 mt-1">
-            Section 9 &amp; 12 Compliance: No political or geopolitical post is published autonomously. Every story requires human verification and sign-off.
+            Approval changes only this browser's local status. No source verification or X publishing integration is configured.
           </p>
         </div>
 
@@ -102,7 +103,7 @@ export const ReviewQueueView: React.FC = () => {
         <div className="flex items-center gap-1 p-1 bg-slate-900 border border-slate-800 rounded-lg text-xs">
           {[
             { id: 'PENDING', label: 'Pending Review' },
-            { id: 'PUBLISHED', label: 'Approved & Published' },
+            { id: 'APPROVED', label: 'Approved locally' },
             { id: 'REJECTED', label: 'Rejected' },
             { id: 'ALL', label: 'All Records' }
           ].map(tab => (
@@ -363,11 +364,10 @@ export const ReviewQueueView: React.FC = () => {
                         />
                         <div>
                           <div className="flex items-center gap-1.5 text-xs font-bold">
-                            <span>Bharat Strategic Intelligence</span>
-                            <span className="text-amber-400" title="Verified Sovereign Intelligence Account">✓</span>
+                            <span>Bharat View Preview</span>
                           </div>
                           <div className="text-[11px] text-slate-400 font-mono">
-                            @BharatIntelDesk &middot; Now
+                            Local preview · not posted
                           </div>
                         </div>
                       </div>
@@ -437,13 +437,18 @@ export const ReviewQueueView: React.FC = () => {
                     </button>
                   </div>
 
-                  {activeStory.publicationStatus !== 'PUBLISHED' ? (
+                  {activeStory.publicationStatus === 'APPROVED' ? (
+                    <div className="flex items-center gap-1.5 text-xs font-mono text-emerald-400 font-bold bg-emerald-500/10 px-3 py-1.5 rounded-lg border border-emerald-500/20">
+                      <Check className="w-4 h-4" />
+                      <span>Approved locally · not published</span>
+                    </div>
+                  ) : activeStory.publicationStatus !== 'PUBLISHED' ? (
                     <button
                       onClick={() => approveStory(activeStory.id)}
                       className="flex items-center gap-2 px-6 py-2.5 text-xs font-bold text-slate-900 bg-emerald-400 hover:bg-emerald-300 rounded-lg shadow-sm shadow-emerald-400/20 cursor-pointer transition-colors"
                     >
                       <CheckCircle className="w-4 h-4" />
-                      <span>Approve &amp; Dispatch to X</span>
+                      <span>Approve Locally</span>
                     </button>
                   ) : (
                     <div className="flex items-center gap-1.5 text-xs font-mono text-emerald-400 font-bold bg-emerald-500/10 px-3 py-1.5 rounded-lg border border-emerald-500/20">

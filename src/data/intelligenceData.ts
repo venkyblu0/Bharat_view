@@ -94,7 +94,7 @@ export const AGENT_SPECS: AgentDutySpec[] = [
     description: 'Synthesizes intelligence from all agents into sharp, evidence-first X posts: Hook, Evidence, Context, Implication, and Pointed Closing.',
     iconName: 'PenTool',
     defaultInputs: [
-      { key: 'storyBrief', label: 'Intelligence Record or Thesis', placeholder: 'e.g. Provide verified facts on new border trade protocol with corroborated MoD release', defaultValue: 'India-France sign maritime logistics pact granting Indian Navy reciprocal port access in Reunion Island' },
+      { key: 'storyBrief', label: 'Intelligence Record or Thesis', placeholder: 'Paste a claim and source material for analysis', defaultValue: '' },
       { key: 'desiredFormat', label: 'Publishing Format', placeholder: 'Single Tweet, 4-Part Thread, Policy Explainer', defaultValue: 'Single Tweet' }
     ]
   }

@@ -7,16 +7,11 @@ export const Header: React.FC = () => {
     activeTab, 
     setActiveTab, 
     stories, 
-    cycleSecondsRemaining, 
     isCycleRunning, 
     runResearchCycle 
   } = useDesk();
 
   const pendingCount = stories.filter(s => s.publicationStatus === 'DRAFT' || s.publicationStatus === 'NEEDS_RESEARCH').length;
-
-  const minutes = Math.floor(cycleSecondsRemaining / 60);
-  const seconds = cycleSecondsRemaining % 60;
-  const timeFormatted = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
   return (
     <header className="sticky top-0 z-50 bg-[#090D16]/95 backdrop-blur-md border-b border-slate-800">
@@ -51,7 +46,7 @@ export const Header: React.FC = () => {
                 activeTab === 'newsroom' ? 'text-amber-400 border-b-2 border-amber-400 font-semibold' : 'text-slate-400'
               }`}
             >
-              Live Newsroom
+              Newsroom Demo
             </button>
             <button
               onClick={() => setActiveTab('agent-lab')}
@@ -104,10 +99,10 @@ export const Header: React.FC = () => {
           <div className="flex items-center gap-3 shrink-0">
             <div className="hidden sm:flex flex-col text-right">
               <span className="text-[10px] uppercase font-mono tracking-wider text-slate-400">
-                Cycle Cadence
+                Source feeds
               </span>
               <span className="text-xs font-mono font-semibold text-slate-200">
-                Next in {timeFormatted}
+                Not configured
               </span>
             </div>
             <button
@@ -118,12 +113,12 @@ export const Header: React.FC = () => {
               {isCycleRunning ? (
                 <>
                   <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  <span>Synthesizing...</span>
+                  <span>Checking...</span>
                 </>
               ) : (
                 <>
                   <Play className="w-3.5 h-3.5 fill-current" />
-                  <span>Trigger 30m Cycle</span>
+                  <span>Check News Feeds</span>
                 </>
               )}
             </button>

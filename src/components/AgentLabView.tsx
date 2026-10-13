@@ -222,7 +222,7 @@ export const AgentLabView: React.FC = () => {
               {/* Run Action */}
               <div className="flex items-center justify-between pt-3 border-t border-slate-800">
                 <div className="text-[11px] text-slate-400 font-mono">
-                  Engine: Gemini 3.8 Search Grounded + Sovereign Rulebook
+                  Engine: Local Ollama model · no web access
                 </div>
 
                 <button
